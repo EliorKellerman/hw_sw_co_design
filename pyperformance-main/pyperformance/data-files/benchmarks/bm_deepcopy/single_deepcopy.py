@@ -6,7 +6,6 @@ Performance is tested on a nested dictionary and a dataclass
 Author: Pieter Eendebak
 
 """
-from lazydeepcopy import DeepcopyBatcher
 import copy
 import pyperf
 from dataclasses import dataclass
@@ -55,12 +54,11 @@ def benchmark_memo(n):
     It measures the time to perform n deep copies of this structure, which exercises the memoization logic in
     copy.deepcopy (to avoid copying the same object multiple times).
     """
-    A = [1] * 100
+    A = [1] * 1000000
     data = {'a': (A, A, A), 'b': [A] * 100}
 
     t0 = pyperf.perf_counter()
-    for ii in range(n):
-        _ = copy.deepcopy(data)
+    _ = copy.deepcopy(data)
     dt = pyperf.perf_counter() - t0
     return dt
 
@@ -98,81 +96,11 @@ def benchmark(n):
                     dt += pyperf.perf_counter() - t0
     return dt
 
-def benchmark_batched(n):
-    a = {
-        'list': [1, 2, 3, 43],
-        't': (1 ,2, 3),
-        'str': 'hello',
-        'subdict': {'a': True}
-    }
-    dc = A('hello', [1, 2, 3], True)
-
-    dt = 0
-    for ii in range(n):
-        # ---- a case (30 copies) ----
-        batch_a = [a.copy() for _ in range(30)]  # shallow distinct tops
-        t0 = pyperf.perf_counter()
-        _ = copy.deepcopy(batch_a)
-        dt += pyperf.perf_counter() - t0
-
-        # ---- dc case (30 copies) ----
-        variants = []
-        for s in ['red','blue','green']:
-            dc.string = s
-            for kk in range(5):
-                dc.lst[0] = kk
-                for b in [True, False]:
-                    dc.boolean = b
-                    variants.append(copy.copy(dc))  # shallow copy for distinct tops
-        # variants has 30 entries
-        t0 = pyperf.perf_counter()
-        _ = copy.deepcopy(variants)
-        dt += pyperf.perf_counter() - t0
-
-    return dt
-
-def benchmark_batched_lazy(n):
-    a = {
-        'list': [1, 2, 3, 43],
-        't': (1 ,2, 3),
-        'str': 'hello',
-        'subdict': {'a': True}
-    }
-    dc = A('hello', [1,2,3], True)
-    batcher = DeepcopyBatcher(max_items=999999)  # let get() drive flush
-
-    dt = 0.0
-    for ii in range(n):
-        # 30 copies of 'a'
-        for _ in range(30):
-            _ = batcher.defer(a.copy())    # distinct tops
-        t0 = pyperf.perf_counter()
-        batcher.flush()                     # one deepcopy for those 30
-        dt += pyperf.perf_counter() - t0
-
-        # 30 copies of 'dc' variants
-        variants = []
-        for s in ['red','blue','green']:
-            dc.string = s
-            for kk in range(5):
-                dc.lst[0] = kk
-                for b in [True, False]:
-                    dc.boolean = b
-                    variants.append(copy.copy(dc))  # distinct tops
-        for v in variants:
-            _ = batcher.defer(v)
-        t0 = pyperf.perf_counter()
-        batcher.flush()                     # one deepcopy for those 30
-        dt += pyperf.perf_counter() - t0
-    return dt
-
 
 if __name__ == "__main__":
     runner = pyperf.Runner()
-    runner.metadata['description'] = "deepcopy benchmark"
+    runner.metadata['description'] = "single deepcopy benchmark"
 
     # runner.bench_time_func('deepcopy', benchmark)
-    # runner.bench_time_func('deepcopy', benchmark_batched)
-    runner.bench_time_func('deepcopy', benchmark_batched_lazy)
     # runner.bench_time_func('deepcopy_reduce', benchmark_reduce)
-    # runner.bench_time_func('deepcopy_memo', benchmark_memo)
+    runner.bench_time_func('deepcopy_memo', benchmark_memo)
