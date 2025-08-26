@@ -201,64 +201,60 @@ class DeepcopyBatcher:
         Resolve the current queue in one batch (must be called under lock).
 
         Steps:
-          1) Build an 'inputs' list passed to copy.deepcopy(inputs) once.
-             How we build this list depends on alias policy:
-                - "preserve": If the *same* object identity appears multiple times
-                  in the queue, we only insert it once into inputs and keep a map
-                  from each queue position to the single shared index.
-                  deepcopy preserves aliasing within a container, so we get exactly
-                  one output instance for that input and we can fan it out to all
-                  handles that referenced it.
-                - "duplicate": We insert each object as a distinct entry, so the
-                  outputs are all distinct deepcopies.
-          2) Perform one copy.deepcopy on 'inputs'.
-          3) Fan out the produced copies to each queued handle based on the map.
+          1) Partition the queue into 'preserve' and 'duplicate' items.
+          2) For 'duplicate' items, perform a unique copy.deepcopy for each one
+             to guarantee they are distinct instances.
+          3) For 'preserve' items, use the original batching logic: build a
+             list of unique inputs, perform one deepcopy, and fan out the
+             aliased results.
           4) Clear the queue.
-
-        Notes:
-          - This preserves regular deepcopy semantics *within* the batch according
-            to the selected alias policy.
-          - If you need time-of-request exactness, use consistency="strict".
         """
-        # Fast path: if all queued items asked for duplication, we can build inputs directly.
-        if all(alias == "duplicate" for _, _, alias in self._queue):
-            inputs = [obj for (_h, obj, _alias) in self._queue]
-            outputs = copy.deepcopy(inputs)
-            for (h, _obj, _alias), c in zip(self._queue, outputs):
-                h._value = c
-                h._ready = True
-            self._queue.clear()
-            self._pending_bytes = 0
+        if not self._queue:
             return
 
-        # Mixed or all "preserve": we want equal identities to share a single input slot.
-        inputs: List[Any] = []
-        index_for_queue_pos: List[int] = []  # queue position -> inputs index
-        seen: dict[int, int] = {}            # id(obj) -> inputs index
+        # --- FIX STARTS HERE ---
 
-        for (h, obj, alias) in self._queue:
-            if alias == "preserve":
+        # 1. Partition the queue
+        preserve_items = []
+        duplicate_items = []
+        for item in self._queue:
+            handle, obj, alias = item
+            if alias == "duplicate":
+                duplicate_items.append(item)
+            else: # 'preserve'
+                preserve_items.append(item)
+        
+        # 2. Handle 'duplicate' items by copying them individually
+        for h, obj, _ in duplicate_items:
+            h._value = copy.deepcopy(obj)
+            h._ready = True
+
+        # 3. Handle 'preserve' items with the original batching logic
+        if preserve_items:
+            inputs: List[Any] = []
+            index_for_queue_pos: List[int] = []  # queue position -> inputs index
+            seen: dict[int, int] = {}            # id(obj) -> inputs index
+
+            for (h, obj, alias) in preserve_items:
+                # We know alias is "preserve" here
                 key = id(obj)
                 if key in seen:
-                    # Already inserted: remember existing index so both handles share one output.
                     index_for_queue_pos.append(seen[key])
                 else:
-                    # First time we see this identity: insert into inputs and record its index.
                     seen[key] = len(inputs)
                     index_for_queue_pos.append(seen[key])
                     inputs.append(obj)
-            else:
-                # "duplicate" item participates as a unique input.
-                index_for_queue_pos.append(len(inputs))
-                inputs.append(obj)
+            
+            # One deepcopy of the entire inputs list for preserved items.
+            if inputs:
+                outputs = copy.deepcopy(inputs)
 
-        # One deepcopy of the entire inputs list.
-        outputs = copy.deepcopy(inputs)
+                # Fan out results to each handle.
+                for (h, _obj, _alias), src_idx in zip(preserve_items, index_for_queue_pos):
+                    h._value = outputs[src_idx]
+                    h._ready = True
 
-        # Fan out results to each handle.
-        for (h, _obj, _alias), src_idx in zip(self._queue, index_for_queue_pos):
-            h._value = outputs[src_idx]
-            h._ready = True
+        # --- FIX ENDS HERE ---
 
         # Reset queue/state.
         self._queue.clear()
@@ -268,35 +264,34 @@ class DeepcopyBatcher:
 class _Proxy:
     """
     A minimal lazy proxy that resolves its target on first use.
-
-    It delegates common Python operations to the resolved object:
-      - attribute access (__getattr__)
-      - item access (__getitem__/__setitem__)
-      - iteration, len(), truthiness, str()/repr()
-
-    Caveat:
-      - Python may bypass __getattr__ for some dunder/operator methods on builtins.
-        For full transparency, consider integrating 'wrapt.ObjectProxy'. This proxy
-        focuses on the most common interactions.
+    ...
     """
     __slots__ = ("_batcher", "_handle")
 
     def __init__(self, batcher: DeepcopyBatcher, handle: _Handle) -> None:
-        # Store references via object.__setattr__ to avoid recursive __setattr__.
+        # ... (no changes here)
         object.__setattr__(self, "_batcher", batcher)
         object.__setattr__(self, "_handle", handle)
 
     # --------- Internal helper ---------
 
     def _resolve(self) -> Any:
-        """
-        Materialize and return the real deep-copied object behind this proxy.
-
-        Implementation:
-          - Calls batcher.get(handle), which may trigger a batch flush.
-          - Caches nothing locally; always fetches from the handle (already ready after first call).
-        """
+        # ... (no changes here)
         return self._batcher.get(self._handle)
+
+    # --- ADD THIS METHOD ---
+    def __deepcopy__(self, memo: dict) -> Any:
+        """
+        Custom deepcopy implementation for the proxy.
+
+        This ensures that when `copy.deepcopy()` encounters a proxy, it copies
+        the underlying, resolved data rather than the proxy object itself.
+        """
+        # 1. Resolve the proxy to get the real object.
+        resolved_obj = self._resolve()
+        # 2. Call deepcopy on the real object, passing the memo dict along.
+        return copy.deepcopy(resolved_obj, memo)
+    # --- END OF ADDED METHOD ---
 
     # --------- Delegations for common operations ---------
 
