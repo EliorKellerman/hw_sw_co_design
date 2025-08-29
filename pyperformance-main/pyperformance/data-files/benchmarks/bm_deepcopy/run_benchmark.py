@@ -7,7 +7,12 @@ Author: Pieter Eendebak
 
 """
 from lazydeepcopy import DeepcopyBatcher
-import copy
+from lazydeepcopy_gem import deepcopy as lazy_deepcopy
+# import fastcopy as copy
+# import copy
+import copy_fastpath as copy
+# import copy_fastmemo as copy
+# import copy_merged as copy
 import pyperf
 from dataclasses import dataclass
 
@@ -123,7 +128,9 @@ def benchmark_batched(n):
                 dc.lst[0] = kk
                 for b in [True, False]:
                     dc.boolean = b
-                    variants.append(copy.copy(dc))  # shallow copy for distinct tops
+                    t0 = pyperf.perf_counter()
+                    variants.append(dc)  # shallow copy for distinct tops
+                    dt += pyperf.perf_counter() - t0
         # variants has 30 entries
         t0 = pyperf.perf_counter()
         _ = copy.deepcopy(variants)
@@ -158,12 +165,49 @@ def benchmark_batched_lazy(n):
                 dc.lst[0] = kk
                 for b in [True, False]:
                     dc.boolean = b
-                    variants.append(copy.copy(dc))  # distinct tops
+                    
+                    t0 = pyperf.perf_counter()
+                    variants.append(dc)  # distinct tops
+                    dt += pyperf.perf_counter() - t0
+        t0 = pyperf.perf_counter()
         for v in variants:
             _ = batcher.defer(v)
-        t0 = pyperf.perf_counter()
         batcher.flush()                     # one deepcopy for those 30
         dt += pyperf.perf_counter() - t0
+    return dt
+
+def benchmark_transparent_lazy(n):
+    """ 
+    Benchmark using the new, fast, and transparent lazy deepcopy.
+    """
+    a = {
+        'list': [1, 2, 3, 43], 't': (1 ,2, 3), 'str': 'hello', 'subdict': {'a': True}
+    }
+    dc = A('hello', [1, 2, 3], True)
+
+    dt = 0
+    for _ in range(n):
+
+        proxies = []
+        # Defer 30 copies of 'a'
+        for _ in range(30):
+            proxies.append(lazy_deepcopy(a)) # Using our fast transparent deepcopy
+
+        # Defer 30 copies of the dataclass variants
+        for s in ['red', 'blue', 'green']:
+            dc.string = s
+            for kk in range(5):
+                dc.lst[0] = kk
+                for b in [True, False]:
+                    dc.boolean = b
+                    proxies.append(lazy_deepcopy(dc)) # Using our fast transparent deepcopy
+
+        # Trigger the single batch flush for all 60 items
+        t0 = pyperf.perf_counter()
+        # A simple access to trigger resolution
+        _ = len(proxies[0])
+        dt += pyperf.perf_counter() - t0
+        
     return dt
 
 
@@ -172,7 +216,8 @@ if __name__ == "__main__":
     runner.metadata['description'] = "deepcopy benchmark"
 
     runner.bench_time_func('deepcopy', benchmark)
-    # runner.bench_time_func('deepcopy', benchmark_batched)
-    # runner.bench_time_func('deepcopy', benchmark_batched_lazy)
-    # runner.bench_time_func('deepcopy_reduce', benchmark_reduce)
-    # runner.bench_time_func('deepcopy_memo', benchmark_memo)
+    # runner.bench_time_func('deepcopy_batched', benchmark_batched)
+    # runner.bench_time_func('deepcopy_batched_lazy', benchmark_batched_lazy)
+    # runner.bench_time_func('deepcopy', benchmark_transparent_lazy)
+    runner.bench_time_func('deepcopy_reduce', benchmark_reduce)
+    runner.bench_time_func('deepcopy_memo', benchmark_memo)
