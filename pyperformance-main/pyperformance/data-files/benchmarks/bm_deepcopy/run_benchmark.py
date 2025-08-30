@@ -6,13 +6,10 @@ Performance is tested on a nested dictionary and a dataclass
 Author: Pieter Eendebak
 
 """
-from lazydeepcopy import DeepcopyBatcher
-from lazydeepcopy_gem import deepcopy as lazy_deepcopy
-# import fastcopy as copy
-# import copy
-import copy_fastpath as copy
-# import copy_fastmemo as copy
-# import copy_merged as copy
+import copy
+import copy_fastpath
+import copy_fastmemo
+import copy_merged  
 import pyperf
 from dataclasses import dataclass
 
@@ -24,7 +21,7 @@ class A:
     boolean: bool
 
 
-def benchmark_reduce(n):
+def benchmark_reduce(n, deepcopy_func):
     """ 
     Benchmark where the __reduce__ functionality is used.
 
@@ -47,12 +44,12 @@ def benchmark_reduce(n):
 
     t0 = pyperf.perf_counter()
     for ii in range(n):
-        _ = copy.deepcopy(c)
+        _ = deepcopy_func(c)
     dt = pyperf.perf_counter() - t0
     return dt
 
 
-def benchmark_memo(n):
+def benchmark_memo(n, deepcopy_func):
     """ 
     Benchmark where the memo functionality is used.
 
@@ -65,12 +62,12 @@ def benchmark_memo(n):
 
     t0 = pyperf.perf_counter()
     for ii in range(n):
-        _ = copy.deepcopy(data)
+        _ = deepcopy_func(data)
     dt = pyperf.perf_counter() - t0
     return dt
 
 
-def benchmark(n):
+def benchmark(n, deepcopy_func):
     """ 
     Benchmark on some standard data types.
 
@@ -90,7 +87,7 @@ def benchmark(n):
     for ii in range(n):
         for jj in range(30):
             t0 = pyperf.perf_counter()
-            _ = copy.deepcopy(a)
+            _ = deepcopy_func(a)
             dt += pyperf.perf_counter() - t0
         for s in ['red', 'blue', 'green']:
             dc.string = s
@@ -99,125 +96,30 @@ def benchmark(n):
                 for b in [True, False]:
                     dc.boolean = b
                     t0 = pyperf.perf_counter()
-                    _ = copy.deepcopy(dc)
+                    _ = deepcopy_func(dc)
                     dt += pyperf.perf_counter() - t0
     return dt
-
-def benchmark_batched(n):
-    a = {
-        'list': [1, 2, 3, 43],
-        't': (1 ,2, 3),
-        'str': 'hello',
-        'subdict': {'a': True}
-    }
-    dc = A('hello', [1, 2, 3], True)
-
-    dt = 0
-    for ii in range(n):
-        # ---- a case (30 copies) ----
-        batch_a = [a.copy() for _ in range(30)]  # shallow distinct tops
-        t0 = pyperf.perf_counter()
-        _ = copy.deepcopy(batch_a)
-        dt += pyperf.perf_counter() - t0
-
-        # ---- dc case (30 copies) ----
-        variants = []
-        for s in ['red','blue','green']:
-            dc.string = s
-            for kk in range(5):
-                dc.lst[0] = kk
-                for b in [True, False]:
-                    dc.boolean = b
-                    t0 = pyperf.perf_counter()
-                    variants.append(dc)  # shallow copy for distinct tops
-                    dt += pyperf.perf_counter() - t0
-        # variants has 30 entries
-        t0 = pyperf.perf_counter()
-        _ = copy.deepcopy(variants)
-        dt += pyperf.perf_counter() - t0
-
-    return dt
-
-def benchmark_batched_lazy(n):
-    a = {
-        'list': [1, 2, 3, 43],
-        't': (1 ,2, 3),
-        'str': 'hello',
-        'subdict': {'a': True}
-    }
-    dc = A('hello', [1,2,3], True)
-    batcher = DeepcopyBatcher(max_items=999999)  # let get() drive flush
-
-    dt = 0.0
-    for ii in range(n):
-        # 30 copies of 'a'
-        for _ in range(30):
-            _ = batcher.defer(a.copy())    # distinct tops
-        t0 = pyperf.perf_counter()
-        batcher.flush()                     # one deepcopy for those 30
-        dt += pyperf.perf_counter() - t0
-
-        # 30 copies of 'dc' variants
-        variants = []
-        for s in ['red','blue','green']:
-            dc.string = s
-            for kk in range(5):
-                dc.lst[0] = kk
-                for b in [True, False]:
-                    dc.boolean = b
-                    
-                    t0 = pyperf.perf_counter()
-                    variants.append(dc)  # distinct tops
-                    dt += pyperf.perf_counter() - t0
-        t0 = pyperf.perf_counter()
-        for v in variants:
-            _ = batcher.defer(v)
-        batcher.flush()                     # one deepcopy for those 30
-        dt += pyperf.perf_counter() - t0
-    return dt
-
-def benchmark_transparent_lazy(n):
-    """ 
-    Benchmark using the new, fast, and transparent lazy deepcopy.
-    """
-    a = {
-        'list': [1, 2, 3, 43], 't': (1 ,2, 3), 'str': 'hello', 'subdict': {'a': True}
-    }
-    dc = A('hello', [1, 2, 3], True)
-
-    dt = 0
-    for _ in range(n):
-
-        proxies = []
-        # Defer 30 copies of 'a'
-        for _ in range(30):
-            proxies.append(lazy_deepcopy(a)) # Using our fast transparent deepcopy
-
-        # Defer 30 copies of the dataclass variants
-        for s in ['red', 'blue', 'green']:
-            dc.string = s
-            for kk in range(5):
-                dc.lst[0] = kk
-                for b in [True, False]:
-                    dc.boolean = b
-                    proxies.append(lazy_deepcopy(dc)) # Using our fast transparent deepcopy
-
-        # Trigger the single batch flush for all 60 items
-        t0 = pyperf.perf_counter()
-        # A simple access to trigger resolution
-        _ = len(proxies[0])
-        dt += pyperf.perf_counter() - t0
-        
-    return dt
-
 
 if __name__ == "__main__":
     runner = pyperf.Runner()
     runner.metadata['description'] = "deepcopy benchmark"
 
-    runner.bench_time_func('deepcopy', benchmark)
-    # runner.bench_time_func('deepcopy_batched', benchmark_batched)
-    # runner.bench_time_func('deepcopy_batched_lazy', benchmark_batched_lazy)
-    # runner.bench_time_func('deepcopy', benchmark_transparent_lazy)
-    runner.bench_time_func('deepcopy_reduce', benchmark_reduce)
-    runner.bench_time_func('deepcopy_memo', benchmark_memo)
+    # # Regular deepcopy
+    # runner.bench_time_func('deepcopy', lambda n: benchmark(n, copy.deepcopy))
+    # runner.bench_time_func('deepcopy_reduce', lambda n: benchmark_reduce(n, copy.deepcopy))
+    # runner.bench_time_func('deepcopy_memo', lambda n: benchmark_memo(n, copy.deepcopy))
+
+    # # Fastpath deepcopy
+    # runner.bench_time_func('deepcopy_fastpath', lambda n: benchmark(n, copy_fastpath.deepcopy))
+    # runner.bench_time_func('deepcopy_fastpath_reduce', lambda n: benchmark_reduce(n, copy_fastpath.deepcopy))
+    # runner.bench_time_func('deepcopy_fastpath_memo', lambda n: benchmark_memo(n, copy_fastpath.deepcopy))
+
+    # # Fastmemo deepcopy
+    # runner.bench_time_func('deepcopy_fastmemo', lambda n: benchmark(n, copy_fastmemo.deepcopy))
+    # runner.bench_time_func('deepcopy_fastmemo_reduce', lambda n: benchmark_reduce(n, copy_fastmemo.deepcopy))
+    # runner.bench_time_func('deepcopy_fastmemo_memo', lambda n: benchmark_memo(n, copy_fastmemo.deepcopy))
+
+    # Merged deepcopy
+    runner.bench_time_func('deepcopy_merged', lambda n: benchmark(n, copy_merged.deepcopy))
+    runner.bench_time_func('deepcopy_merged_reduce', lambda n: benchmark_reduce(n, copy_merged.deepcopy))
+    runner.bench_time_func('deepcopy_merged_memo', lambda n: benchmark_memo(n, copy_merged.deepcopy))

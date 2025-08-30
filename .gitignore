@@ -206,3 +206,6 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 jammy-server-cloudimg-amd64-disk-kvm.img
+out_benches/*
+.bench-venv-deepcopy/*
+.bench-venv-crypto_pyaes/*
