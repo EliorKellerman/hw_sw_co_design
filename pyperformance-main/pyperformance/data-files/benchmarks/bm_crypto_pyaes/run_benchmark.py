@@ -7,8 +7,10 @@ Benchmark AES in CTR mode using the pyaes module.
 
 import pyperf
 
-import aes_precomputed as pyaes
-#import pyaes
+# import aes_precomputed as pyaes
+# import aes_my_version as pyaes
+# import aes_my_version1 as pyaes
+import pyaes
 
 # 23,000 bytes
 CLEARTEXT = b"This is a test. What could possibly go wrong? " * 500
@@ -40,8 +42,8 @@ def bench_pyaes(loops):
 
 
 if __name__ == "__main__":
-    # runner = pyperf.Runner()
-    # runner.metadata['description'] = ("Pure-Python Implementation "
-    #                                   "of the AES block-cipher")
-    # runner.bench_time_func('crypto_pyaes', bench_pyaes)
-    bench_pyaes(10)
+    runner = pyperf.Runner()
+    runner.metadata['description'] = ("Pure-Python Implementation "
+                                      "of the AES block-cipher")
+    runner.bench_time_func('crypto_pyaes', bench_pyaes)
+    # bench_pyaes(10)

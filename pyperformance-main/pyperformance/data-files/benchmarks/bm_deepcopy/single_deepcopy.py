@@ -57,10 +57,10 @@ def benchmark_memo(n):
     A = [1] * 1000000
     data = {'a': (A, A, A), 'b': [A] * 100}
 
-    t0 = pyperf.perf_counter()
+    # t0 = pyperf.perf_counter()
     _ = copy.deepcopy(data)
-    dt = pyperf.perf_counter() - t0
-    return dt
+    # dt = pyperf.perf_counter() - t0
+    return
 
 
 def benchmark(n):
@@ -98,9 +98,10 @@ def benchmark(n):
 
 
 if __name__ == "__main__":
-    runner = pyperf.Runner()
-    runner.metadata['description'] = "single deepcopy benchmark"
+    # runner = pyperf.Runner()
+    # runner.metadata['description'] = "single deepcopy benchmark"
 
     # runner.bench_time_func('deepcopy', benchmark)
     # runner.bench_time_func('deepcopy_reduce', benchmark_reduce)
-    runner.bench_time_func('deepcopy_memo', benchmark_memo)
+    # runner.bench_time_func('deepcopy_memo', benchmark_memo)
+    benchmark_memo(1)
