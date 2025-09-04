@@ -7,9 +7,6 @@ Author: Pieter Eendebak
 
 """
 import copy
-import copy_fastpath
-import copy_fastmemo
-import copy_merged  
 import pyperf
 from dataclasses import dataclass
 
@@ -21,7 +18,7 @@ class A:
     boolean: bool
 
 
-def benchmark_reduce(n, deepcopy_func):
+def benchmark_reduce(n):
     """ 
     Benchmark where the __reduce__ functionality is used.
 
@@ -44,12 +41,12 @@ def benchmark_reduce(n, deepcopy_func):
 
     t0 = pyperf.perf_counter()
     for ii in range(n):
-        _ = deepcopy_func(c)
+        _ = copy.deepcopy(c)
     dt = pyperf.perf_counter() - t0
     return dt
 
 
-def benchmark_memo(n, deepcopy_func):
+def benchmark_memo(n):
     """ 
     Benchmark where the memo functionality is used.
 
@@ -62,12 +59,12 @@ def benchmark_memo(n, deepcopy_func):
 
     t0 = pyperf.perf_counter()
     for ii in range(n):
-        _ = deepcopy_func(data)
+        _ = copy.deepcopy(data)
     dt = pyperf.perf_counter() - t0
     return dt
 
 
-def benchmark(n, deepcopy_func):
+def benchmark(n):
     """ 
     Benchmark on some standard data types.
 
@@ -87,7 +84,7 @@ def benchmark(n, deepcopy_func):
     for ii in range(n):
         for jj in range(30):
             t0 = pyperf.perf_counter()
-            _ = deepcopy_func(a)
+            _ = copy.deepcopy(a)
             dt += pyperf.perf_counter() - t0
         for s in ['red', 'blue', 'green']:
             dc.string = s
@@ -96,7 +93,7 @@ def benchmark(n, deepcopy_func):
                 for b in [True, False]:
                     dc.boolean = b
                     t0 = pyperf.perf_counter()
-                    _ = deepcopy_func(dc)
+                    _ = copy.deepcopy(dc)
                     dt += pyperf.perf_counter() - t0
     return dt
 
@@ -104,22 +101,6 @@ if __name__ == "__main__":
     runner = pyperf.Runner()
     runner.metadata['description'] = "deepcopy benchmark"
 
-    # # Regular deepcopy
-    # runner.bench_time_func('deepcopy', lambda n: benchmark(n, copy.deepcopy))
-    # runner.bench_time_func('deepcopy_reduce', lambda n: benchmark_reduce(n, copy.deepcopy))
-    # runner.bench_time_func('deepcopy_memo', lambda n: benchmark_memo(n, copy.deepcopy))
-
-    # # Fastpath deepcopy
-    # runner.bench_time_func('deepcopy_fastpath', lambda n: benchmark(n, copy_fastpath.deepcopy))
-    # runner.bench_time_func('deepcopy_fastpath_reduce', lambda n: benchmark_reduce(n, copy_fastpath.deepcopy))
-    # runner.bench_time_func('deepcopy_fastpath_memo', lambda n: benchmark_memo(n, copy_fastpath.deepcopy))
-
-    # # Fastmemo deepcopy
-    # runner.bench_time_func('deepcopy_fastmemo', lambda n: benchmark(n, copy_fastmemo.deepcopy))
-    # runner.bench_time_func('deepcopy_fastmemo_reduce', lambda n: benchmark_reduce(n, copy_fastmemo.deepcopy))
-    # runner.bench_time_func('deepcopy_fastmemo_memo', lambda n: benchmark_memo(n, copy_fastmemo.deepcopy))
-
-    # Merged deepcopy
-    runner.bench_time_func('deepcopy_merged', lambda n: benchmark(n, copy_merged.deepcopy))
-    runner.bench_time_func('deepcopy_merged_reduce', lambda n: benchmark_reduce(n, copy_merged.deepcopy))
-    runner.bench_time_func('deepcopy_merged_memo', lambda n: benchmark_memo(n, copy_merged.deepcopy))
+    runner.bench_time_func('deepcopy', benchmark)
+    runner.bench_time_func('deepcopy_reduce', benchmark_reduce)
+    runner.bench_time_func('deepcopy_memo', benchmark_memo)

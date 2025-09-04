@@ -7,7 +7,6 @@ Author: Pieter Eendebak
 
 """
 import copy
-import pyperf
 from dataclasses import dataclass
 
 
@@ -39,11 +38,8 @@ def benchmark_reduce(n):
             self.__dict__.update(state)
     c = C()
 
-    t0 = pyperf.perf_counter()
     for ii in range(n):
         _ = copy.deepcopy(c)
-    dt = pyperf.perf_counter() - t0
-    return dt
 
 
 def benchmark_memo(n):
@@ -56,11 +52,7 @@ def benchmark_memo(n):
     """
     A = [1] * 1000000
     data = {'a': (A, A, A), 'b': [A] * 100}
-
-    # t0 = pyperf.perf_counter()
     _ = copy.deepcopy(data)
-    # dt = pyperf.perf_counter() - t0
-    return
 
 
 def benchmark(n):
@@ -79,29 +71,19 @@ def benchmark(n):
     }
     dc = A('hello', [1, 2, 3], True)
 
-    dt = 0
     for ii in range(n):
         for jj in range(30):
-            t0 = pyperf.perf_counter()
             _ = copy.deepcopy(a)
-            dt += pyperf.perf_counter() - t0
         for s in ['red', 'blue', 'green']:
             dc.string = s
             for kk in range(5):
                 dc.lst[0] = kk
                 for b in [True, False]:
                     dc.boolean = b
-                    t0 = pyperf.perf_counter()
                     _ = copy.deepcopy(dc)
-                    dt += pyperf.perf_counter() - t0
-    return dt
 
 
 if __name__ == "__main__":
-    # runner = pyperf.Runner()
-    # runner.metadata['description'] = "single deepcopy benchmark"
-
-    # runner.bench_time_func('deepcopy', benchmark)
-    # runner.bench_time_func('deepcopy_reduce', benchmark_reduce)
-    # runner.bench_time_func('deepcopy_memo', benchmark_memo)
+    benchmark(1)
+    benchmark_reduce(1)
     benchmark_memo(1)

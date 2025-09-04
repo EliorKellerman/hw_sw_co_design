@@ -1,0 +1,26 @@
+
+ Performance counter stats for 'python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes.py' (5 runs):
+
+            201.95 msec task-clock                #    0.989 CPUs utilized            ( +-  0.17% )
+                13      context-switches          #   64.682 /sec                     ( +-  1.88% )
+                 0      cpu-migrations            #    0.000 /sec                   
+             1,224      page-faults               #    6.090 K/sec                    ( +-  0.08% )
+       524,213,952      cycles                    #    2.608 GHz                      ( +-  0.16% )  (25.99%)
+     1,300,327,893      instructions              #    2.49  insn per cycle           ( +-  0.37% )  (33.91%)
+       250,348,826      branches                  #    1.246 G/sec                    ( +-  0.56% )  (33.91%)
+         2,260,267      branch-misses             #    0.91% of all branches          ( +-  1.82% )  (35.60%)
+       357,041,108      L1-dcache-loads           #    1.776 G/sec                    ( +-  0.79% )  (37.58%)
+         5,537,034      L1-dcache-load-misses     #    1.58% of all L1-dcache accesses  ( +-  0.85% )  (42.34%)
+           885,555      LLC-loads                 #    4.406 M/sec                    ( +-  5.32% )  (34.41%)
+               301      LLC-load-misses           #    0.04% of all LL-cache accesses  ( +-412.97% )  (34.53%)
+   <not supported>      L1-icache-loads                                             
+           878,503      L1-icache-load-misses                                         ( +- 10.83% )  (34.54%)
+       413,263,809      dTLB-loads                #    2.056 G/sec                    ( +-  0.67% )  (31.68%)
+            63,962      dTLB-load-misses          #    0.02% of all dTLB cache accesses  ( +- 11.86% )  (31.68%)
+            17,870      iTLB-loads                #   88.913 K/sec                    ( +-  5.44% )  (29.87%)
+             6,078      iTLB-load-misses          #   34.92% of all iTLB cache accesses  ( +-105.41% )  (27.88%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+          0.204181 +- 0.000290 seconds time elapsed  ( +-  0.14% )
+

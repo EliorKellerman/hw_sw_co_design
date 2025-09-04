@@ -212,3 +212,4 @@ out_benches/*
 .bench-venv-crypto_pyaes/*
 .bench-venv-deepcopy-base/*
 .bench-venv-deepcopy-merged/*
+.nfs*

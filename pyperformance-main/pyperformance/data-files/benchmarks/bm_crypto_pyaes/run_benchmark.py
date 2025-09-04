@@ -6,10 +6,6 @@ Benchmark AES in CTR mode using the pyaes module.
 """
 
 import pyperf
-
-# import aes_precomputed as pyaes
-# import aes_my_version as pyaes
-# import aes_my_version1 as pyaes
 import pyaes
 
 # 23,000 bytes
@@ -46,4 +42,3 @@ if __name__ == "__main__":
     runner.metadata['description'] = ("Pure-Python Implementation "
                                       "of the AES block-cipher")
     runner.bench_time_func('crypto_pyaes', bench_pyaes)
-    # bench_pyaes(10)

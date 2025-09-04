@@ -1,0 +1,26 @@
+
+ Performance counter stats for 'python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_deepcopy/single_deepcopy.py' (5 runs):
+
+            479.05 msec task-clock                #    0.977 CPUs utilized            ( +-  0.81% )
+                10      context-switches          #   20.504 /sec                     ( +-  8.12% )
+                 0      cpu-migrations            #    0.000 /sec                   
+             5,397      page-faults               #   11.066 K/sec                    ( +-  0.02% )
+     1,243,910,353      cycles                    #    2.550 GHz                      ( +-  0.81% )  (30.42%)
+     3,871,282,896      instructions              #    3.06  insn per cycle           ( +-  0.41% )  (38.77%)
+       694,095,681      branches                  #    1.423 G/sec                    ( +-  0.40% )  (39.60%)
+         1,164,964      branch-misses             #    0.17% of all branches          ( +- 33.18% )  (40.15%)
+     1,069,211,600      L1-dcache-loads           #    2.192 G/sec                    ( +-  0.76% )  (40.15%)
+         5,067,386      L1-dcache-load-misses     #    0.47% of all L1-dcache accesses  ( +-  6.83% )  (39.53%)
+         1,475,274      LLC-loads                 #    3.025 M/sec                    ( +- 13.51% )  (30.34%)
+            30,139      LLC-load-misses           #    1.72% of all LL-cache accesses  ( +-103.94% )  (29.80%)
+   <not supported>      L1-icache-loads                                             
+         1,503,456      L1-icache-load-misses                                         ( +-  0.69% )  (29.80%)
+     1,108,744,172      dTLB-loads                #    2.273 G/sec                    ( +-  0.89% )  (30.05%)
+            79,161      dTLB-load-misses          #    0.01% of all dTLB cache accesses  ( +-221.47% )  (30.06%)
+            25,127      iTLB-loads                #   51.520 K/sec                    ( +- 16.60% )  (30.05%)
+            24,012      iTLB-load-misses          #  101.91% of all iTLB cache accesses  ( +-  5.78% )  (30.05%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+           0.49012 +- 0.00410 seconds time elapsed  ( +-  0.84% )
+
