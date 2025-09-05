@@ -1,0 +1,26 @@
+
+ Performance counter stats for 'python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes_opt.py' (5 runs):
+
+            160.36 msec task-clock                #    0.983 CPUs utilized            ( +-  0.19% )
+                 7      context-switches          #   43.531 /sec                     ( +-  7.00% )
+                 2      cpu-migrations            #   12.437 /sec                     ( +- 12.25% )
+             1,230      page-faults               #    7.649 K/sec                    ( +-  0.07% )
+       416,309,105      cycles                    #    2.589 GHz                      ( +-  0.19% )  (30.88%)
+     1,071,954,745      instructions              #    2.57  insn per cycle           ( +-  0.25% )  (40.85%)
+       202,537,348      branches                  #    1.260 G/sec                    ( +-  0.15% )  (41.12%)
+         1,908,754      branch-misses             #    0.95% of all branches          ( +-  0.90% )  (40.99%)
+       268,243,611      L1-dcache-loads           #    1.668 G/sec                    ( +-  0.17% )  (40.99%)
+         5,882,693      L1-dcache-load-misses     #    2.20% of all L1-dcache accesses  ( +-  0.54% )  (39.21%)
+           892,547      LLC-loads                 #    5.551 M/sec                    ( +-  0.83% )  (28.95%)
+               914      LLC-load-misses           #    0.10% of all LL-cache accesses  ( +-158.33% )  (29.09%)
+   <not supported>      L1-icache-loads                                             
+           656,612      L1-icache-load-misses                                         ( +-  2.24% )  (29.09%)
+       331,012,628      dTLB-loads                #    2.058 G/sec                    ( +-  0.35% )  (29.91%)
+            21,850      dTLB-load-misses          #    0.01% of all dTLB cache accesses  ( +-  7.07% )  (29.92%)
+            24,355      iTLB-loads                #  151.457 K/sec                    ( +-  9.99% )  (29.92%)
+             4,829      iTLB-load-misses          #   23.43% of all iTLB cache accesses  ( +-  8.42% )  (29.92%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+          0.163152 +- 0.000256 seconds time elapsed  ( +-  0.16% )
+

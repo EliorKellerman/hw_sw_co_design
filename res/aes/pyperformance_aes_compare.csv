@@ -1,0 +1,2 @@
+Benchmark,Baseline Mean (us),Baseline Std (us),Optimized Mean (us),Optimized Std (us),Delta (us) (Opt - Base),Improvement (%)
+crypto_pyaes,175000.000000,1000.000000,136000.000000,1000.000000,-39000.000000,22.29

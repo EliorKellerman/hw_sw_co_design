@@ -1,0 +1,4 @@
+Benchmark,Baseline Mean (us),Baseline Std (us),Optimized Mean (us),Optimized Std (us),Delta (us) (Opt - Base),Improvement (%)
+deepcopy,665.000000,4.000000,496.000000,5.000000,-169.000000,25.41
+deepcopy_memo,79.700000,0.400000,67.500000,0.500000,-12.200000,15.31
+deepcopy_reduce,5.800000,0.060000,4.510000,0.040000,-1.290000,22.24

@@ -1,0 +1,40 @@
+.....................
+deepcopy: Mean +- std dev: 661 us +- 5 us
+.....................
+deepcopy_reduce: Mean +- std dev: 5.68 us +- 0.05 us
+.....................
+deepcopy_memo: Mean +- std dev: 79.6 us +- 0.6 us
+.....................
+deepcopy_fastpath: Mean +- std dev: 617 us +- 4 us
+.....................
+deepcopy_fastpath_reduce: Mean +- std dev: 5.20 us +- 0.06 us
+.....................
+deepcopy_fastpath_memo: Mean +- std dev: 81.2 us +- 0.7 us
+.....................
+deepcopy_fastmemo: Mean +- std dev: 512 us +- 3 us
+.....................
+deepcopy_fastmemo_reduce: Mean +- std dev: 4.96 us +- 0.06 us
+.....................
+deepcopy_fastmemo_memo: Mean +- std dev: 65.6 us +- 0.3 us
+.....................
+WARNING: the benchmark result may be unstable
+* Not enough samples to get a stable result (95% certainly of less than 1% variation)
+
+Try to rerun the benchmark with more runs, values and/or loops.
+Run 'python3 -m pyperf system tune' command to reduce the system jitter.
+Use pyperf stats, pyperf dump and pyperf hist to analyze results.
+Use --quiet option to hide these warnings.
+
+deepcopy_opt: Mean +- std dev: 490 us +- 11 us
+.....................
+WARNING: the benchmark result may be unstable
+* Not enough samples to get a stable result (95% certainly of less than 1% variation)
+
+Try to rerun the benchmark with more runs, values and/or loops.
+Run 'python3 -m pyperf system tune' command to reduce the system jitter.
+Use pyperf stats, pyperf dump and pyperf hist to analyze results.
+Use --quiet option to hide these warnings.
+
+deepcopy_opt_reduce: Mean +- std dev: 4.49 us +- 0.15 us
+.....................
+deepcopy_opt_memo: Mean +- std dev: 67.2 us +- 0.5 us
