@@ -213,3 +213,5 @@ out_benches/*
 .bench-venv-deepcopy-base/*
 .bench-venv-deepcopy-merged/*
 .nfs*
+run_benches_aes.sh
+run_benches.sh

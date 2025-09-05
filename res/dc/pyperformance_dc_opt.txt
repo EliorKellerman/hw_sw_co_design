@@ -1,6 +1,6 @@
 .....................
-deepcopy: Mean +- std dev: 496 us +- 5 us
+deepcopy: Mean +- std dev: 484 us +- 3 us
 .....................
-deepcopy_reduce: Mean +- std dev: 4.51 us +- 0.04 us
+deepcopy_reduce: Mean +- std dev: 4.42 us +- 0.05 us
 .....................
-deepcopy_memo: Mean +- std dev: 67.5 us +- 0.5 us
+deepcopy_memo: Mean +- std dev: 66.9 us +- 0.3 us

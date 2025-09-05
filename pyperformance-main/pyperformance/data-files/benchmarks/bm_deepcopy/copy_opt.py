@@ -92,8 +92,8 @@ def deepcopy(x, memo=None, _nil=[]):
     # MEMO-OPT: detect atomic immutable types before touching memo.
     # If the copier for this exact type is _deepcopy_atomic, they are safe to return directly.
     cls = type(x)                                      # MEMO-OPT
-    copier_probe = _deepcopy_dispatch.get(cls)         # MEMO-OPT
-    if copier_probe is _deepcopy_atomic:               # MEMO-OPT: skip memo lookup entirely
+    copier = _deepcopy_dispatch.get(cls)         # MEMO-OPT
+    if copier is _deepcopy_atomic:               # MEMO-OPT: skip memo lookup entirely
         return x
 
     if memo is None:
@@ -104,7 +104,6 @@ def deepcopy(x, memo=None, _nil=[]):
     if y is not _nil:
         return y
 
-    copier = _deepcopy_dispatch.get(cls)
     if copier is not None:
         y = copier(x, memo)
     else:

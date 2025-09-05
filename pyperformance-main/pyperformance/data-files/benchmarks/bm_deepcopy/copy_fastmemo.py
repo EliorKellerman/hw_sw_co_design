@@ -103,8 +103,8 @@ def deepcopy(x, memo=None, _nil=[]):
     #           We use the same dispatch table the stdlib uses; if the copier
     #           for this exact type is _deepcopy_atomic, we can return x right away.
     cls = type(x)  # MEMO-OPT: compute once and reuse below
-    copier_probe = _deepcopy_dispatch.get(cls)  # MEMO-OPT
-    if copier_probe is _deepcopy_atomic:  # MEMO-OPT: atomic → no memo traffic
+    copier = _deepcopy_dispatch.get(cls)  # MEMO-OPT
+    if copier is _deepcopy_atomic:  # MEMO-OPT: atomic → no memo traffic
         return x
 
     if memo is None:
@@ -115,7 +115,6 @@ def deepcopy(x, memo=None, _nil=[]):
     if y is not _nil:
         return y
 
-    copier = _deepcopy_dispatch.get(cls)
     if copier is not None:
         y = copier(x, memo)
     else:

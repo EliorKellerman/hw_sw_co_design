@@ -4,6 +4,28 @@
 # this file will summarise all the benchmark runs and measurments taken in the project
 # it may include calls to other .sh files to run specific benchmark comparisons
 
+echo "[*] Installing system prerequisites..."
+
+if [ ! -d "$HOME/FlameGraph" ]; then
+  echo "[*] Cloning FlameGraph tools..."
+  git clone https://github.com/brendangregg/FlameGraph.git "$HOME/FlameGraph"
+fi
+
+echo "[*] Installing Python prerequisites..."
+python3 -m pip install --upgrade pip setuptools wheel
+
+# PyPerformance + PyPerf
+python3 -m pip install pyperformance pyperf psutil packaging tomli
+
+# PySpy for flamegraphs
+python3 -m pip install py-spy
+
+# AES library used by the crypto_pyaes benchmark
+python3 -m pip install pyaes
+
+# Make sure local copy.py / copy_opt.py is on PYTHONPATH if needed
+export PYTHONPATH=$PYTHONPATH:$(pwd)
+
 # AES
 mkdir -p res/aes
 # run single AES benchmark with perf stat (baseline + optimised)
