@@ -41,4 +41,4 @@ if __name__ == "__main__":
     runner = pyperf.Runner()
     runner.metadata['description'] = ("Pure-Python Implementation "
                                       "of the AES block-cipher")
-    runner.bench_time_func('crypto_pyaes_opt', bench_pyaes)
+    runner.bench_time_func('crypto_pyaes', bench_pyaes)
