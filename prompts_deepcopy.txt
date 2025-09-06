@@ -1,0 +1,50 @@
+NOTE: prompts for general run scripts and Linux operations are not given - we assume they are less relevant for the purpose of the check.
+
+--------------- general ---------------
+
+give me simple code to run dis to view bytecode in python
+
+explain ast
+
+--------------- deepcopy ---------------
+
+i added "copy" from my local download of python. i want you to explain deepcopy using comments inside the code. explain it for someone with basic knowledge in python
+
+give an example of reduce and reconstruct while following the lines of code to show when and how each operation is done.
+
+what is the difference between reduce and reduce ex in deepcopy
+
+i am using deepcopy in python. in it, atomic types like int are not copy but return as they are. how that works? considering c array for example, the array is saved in the memory with the int values one after the other. if i copy the array, each int inside need in fact to be copied. why is that different in python
+
+i want you to give me a python code. in the first part, create 10 different structures (lists of lists, tuples,maps and classes and so on) and deepcopy each one of then. in the second part take the same 10 structures and create a list that points at each on of them and then deepcopy the list. in other words, i want you to batch all the 10 and deepcopy then with one operation. add pyperf to mesure the time it takes to perform the 10 deepcopy and compare it to the time it takes to perform the one big deepcopy
+
+Please explain to me, like I'm 10, but 10-year-old with knowledge of Python, how is this change safe? What are the principles of the acceleration here? And specifically, about the binding of the append-like operations to avoid global lookups. From what I know, when you extend an attribute, it is for a reason. So if an object extended the deep copy attribute, I assume it was for a reason. So how can we be sure we are not screwing anything up when we avoid the lookup for the extension?
+
+Okay, so now we want to gradually change the original copy.py Python library, and by gradually I mean each of the upgrades one at a time to see what gives us acceleration. So, firstly, take this copy.py library, the original library that implements DeepCopy, and change only this feature that we just talked about of the local binding of the DeepCopy and Append. And we want to run it and see if maybe we can gain some performance with it. Later on, I will ask you to upgrade with the FastPass feature. Again, please change minimally, so it is very clear what are the changes to the original library. So, I will just mark you down with some comments, I guess. By the way, it seems like in DeepCopyList, in the original library, they do perform binding for append, so this is not really new, I guess, but I don't see binding on the DeepCopy function itself. You can look it up in line 201 in the DeepCopyList.
+
+now we see that this change alone is making the benchmark worse. Lets try and implement surgically the fastpath changes and see if with them we get the benefit
+
+### deepcopy ### Mean +- std dev: 625 us +- 5 us ### deepcopy_reduce ### Mean +- std dev: 5.31 us +- 0.06 us ### deepcopy_memo ### Mean +- std dev: 81.3 us +- 0.6 us 8% gain on deepcopy and deepcopy_reduce . explain this gain from the fastpath change, keep it simple in bullets and consider some hardware/low-level pov that could explain it.
+
+can you breifly explain reduce in python and whats the usage+where this args come in place
+
+now generate a similar copy.py lib but surgically implement only the memo upgrade. again, keep the code changes minimal and add comments on the changed lines. Give a brief explanation here in chat of whats the logic behind the change and what are the scenarios where you would expect the change to take affect and where it wont.
+
+Now I want a merged Copy.py library implementation, which is just simply a merge of the two upgrades we did, so the MemoOpt and the FastPathReduce, all that before. Again, keep it simple, minimal changes, just merge the two files, the two little upgrades, and let's check if those two upgrades merge, provide some more performance gain together, or one is more dominant maybe, just see how it compares. You can also describe what is the expectation, do you think it will improve better together, do they relate to each other, the two changes, or does one probably is stronger than the other, and we will see similar gain to one of the singular updates. So please provide the code and the necessary explanation.
+
+Write a paragraph about what can I expect when I increase the number 5 constant here of the length comparison. When I tried to increase it to 100, I saw some improvement on very large-scale structs that I tried to deep-copy in a benchmark, but for most of the benchmarks and for regular structures, I did not see any effect. So just write one paragraph debating this and keep it in a vibe of a comment or extra detail, fun fact, etc. Not the main dish of our report.
+
+
+I am analyzing a single deep copy run, and I see from the frame graph that a significant portion of the time is being spent on line 178, which is the return line in the deep copy function, as you can see in the copy.py library. Please explain why in Python we would expect to be so much time on just a return line. What's happening behind the scenes? What do we miss here? Also, regardless of that, try to explain from the frame graph and the number of lines, why do we spend so much time in those specific lines.
+
+why specifically copy lines 144 and 146 are so hot
+144-146:
+    copier = _deepcopy_dispatch.get(cls)
+    if copier is not None:
+        y = copier(x, memo)
+
+explain python arena that is being used for memory efficency
+
+write impresive presentation of the cam exceleration we discused. how does it work, how easy it is to implement and why it improves the performace. you can say that it is not the main bottelneck since, as expected, the copy itself is the mejority of the runtime but it is significant enough
+
+try to produce a diagram for this hardware proposal. show (preferably a block diagram) how the new CAM module integrates with the python in the memo process, and make it clear what block is hardware related (CAM, mem cntrlr, cache, main mem) vs software (python, os, bytecode etc). Also generate a brief text that I could use on napkin AI as a prompt to try and generate such diagram in case you fail (some more motivation for you haha)

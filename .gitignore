@@ -215,3 +215,5 @@ out_benches/*
 .nfs*
 run_benches_aes.sh
 run_benches.sh
+flamemake.py
+make_flame.sh

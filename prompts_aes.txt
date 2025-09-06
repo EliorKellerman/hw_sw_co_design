@@ -1,0 +1,28 @@
+--------------- aes ---------------
+assume i know how aes ctr works, give a brief of it just to remind me i remember everything
+
+i added python implementation of aes ctr. i see there are multiple lists saved. i know that in a lot of implementations the S box is saved to avoid calculating the matrix. why they save the other lists?
+
+in pyaes library, instead of executing the regular operations of swaps and mixes, the library uses precomputes vectors T1-8 to optimize the execution time. explain how it works, how the values of the lists are calculated? give a simple example with real values and compare the regular algorithm and the optimized one
+
+give an example of one round of aes calculation using real values, once with t tables and once without them (using the same values)
+
+here is part of pyaes library: 
+(s1, s2, s3) = [1, 2, 3] # Convert plaintext to (ints ^ key) t = [(_compact_word(plaintext[4 * i:4 * i + 4]) ^ self._Ke[0][i]) for i in xrange(0, 4)] # Apply round transforms for r in xrange(1, rounds): for i in xrange(0, 4): a[i] = (self.T1[(t[ i ] >> 24) & 0xFF] ^ self.T2[(t[(i + s1) % 4] >> 16) & 0xFF] ^ self.T3[(t[(i + s2) % 4] >> 8) & 0xFF] ^ self.T4[ t[(i + s3) % 4] & 0xFF] ^ self._Ke[r][i]) t = copy.copy(a) 
+i want to try to speed up the calculation so i thought about unrolling the loop with index i to avoid the addition and mod calculations. do you think it will have an affect on the results. also do the unrolling for me
+
+in the end of each round the code copies a into t. copy operation takes time as well do you think using two a arrays with t being a pointer that changes where it points each round to avoid the copy operation will be more efficient?
+
+it worked! now i want to focus on elements like that one: self.T1[(t[0] >> 24) & 0xFF in it there is shift operation and "and" operation with mask of ones (FF). can i avoid this operations and use simpler version for speedup?
+
+I ran the perf command with report on a loop of 100 AES encrypt and decrypt operations. Now I get this output. What in the F is going on here? I cannot deduct anything at all from this. I barely see some Python instructions that I can understand. What is relevant from this text output to our report or the project altogether? I cannot deduct the bottleneck or something. Please do your magic.
+
+and from here what can you deduce about the aesbenchmark (just a single aes encrypt+decrypt, (attached the perf report)
+
+Try to deduce this one. I ran more AES commands of encrypt and decrypt, 100 to be exact. Deduce what is the bottleneck of the Python AES calculation.
+
+So basically, if I'm looking to see which Python operations are taking the most time from the benchmark, I understand that this method of measuring is not going to tell me, because what I see is just 30% spent in PyEvalFrameDefault, so I will not be able to understand which specific instruction of Python, Python function, is taking the most time. How would you measure it to see actually that instruction?
+
+I have a new solution of hardware acceleration. I want to design a separate AES hardware unit designed to accelerate the t-table lookups. The unit will consist of primarily a cache 4 kilobytes of size to hold the t-tables in it. It is exactly 4 kilobytes for the size needed for the t-tables. Each t-table is 1 kilobyte. Also, this unit will have an input of 4 addresses, 4 indexes for the t-table, so that simultaneously, in a kind of vectorial or parallel way, you will provide the unit with the addresses of each of the t-tables and get the results together and the output signal will XOR all of the results from the lookup. So essentially, the CPU will only need to give the indexes and XOR the result with the key, and that is the round of the AES. Please formalize this suggestion, give trade-offs, inputs and outputs, and just in general, what can we do with it? How does it sound?Also, since the key is pre-computed and in memory at the start of the process whatsoever, we can add to the unit a buffer to hold the key, and at the output we can output the previous output of XOR of the four lookups from the T-table and XOR it with the key, so the unit will do all of the round arithmetics in no time.
+
+Good idea for the final round, we can keep the S-Box just like we're keeping the T-Tables So we will tank the extra memory. Now, formalize all of this idea Take the goal, functional overview, and architecture, put it in paragraphs, they can copy. Briefly describe the I-O interface and the trade-offs. You can disregard the programming, the performance model , make Security notes brief, no Integration options, don't include Practical path, I think it's very clear
