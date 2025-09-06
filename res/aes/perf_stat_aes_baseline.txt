@@ -1,26 +1,44 @@
+.....................
+crypto_pyaes: Mean +- std dev: 174 ms +- 1 ms
+.....................
+WARNING: the benchmark result may be unstable
+* Not enough samples to get a stable result (95% certainly of less than 1% variation)
 
- Performance counter stats for 'python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes.py' (5 runs):
+Try to rerun the benchmark with more runs, values and/or loops.
+Run 'python3 -m pyperf system tune' command to reduce the system jitter.
+Use pyperf stats, pyperf dump and pyperf hist to analyze results.
+Use --quiet option to hide these warnings.
 
-            200.74 msec task-clock                #    0.978 CPUs utilized            ( +-  0.16% )
-                11      context-switches          #   54.594 /sec                     ( +- 16.76% )
-                 1      cpu-migrations            #    4.963 /sec                     ( +- 24.49% )
-             1,224      page-faults               #    6.075 K/sec                    ( +-  0.07% )
-       521,061,541      cycles                    #    2.586 GHz                      ( +-  0.17% )  (29.67%)
-     1,309,522,061      instructions              #    2.50  insn per cycle           ( +-  0.48% )  (37.64%)
-       245,283,271      branches                  #    1.217 G/sec                    ( +-  0.37% )  (37.64%)
-         2,254,000      branch-misses             #    0.92% of all branches          ( +-  2.05% )  (37.47%)
-       355,937,546      L1-dcache-loads           #    1.767 G/sec                    ( +-  0.87% )  (38.57%)
-         5,279,693      L1-dcache-load-misses     #    1.51% of all L1-dcache accesses  ( +-  0.25% )  (38.73%)
-           951,538      LLC-loads                 #    4.723 M/sec                    ( +-  5.12% )  (30.49%)
-               479      LLC-load-misses           #    0.06% of all LL-cache accesses  ( +-316.76% )  (30.65%)
+crypto_pyaes: Mean +- std dev: 175 ms +- 2 ms
+.....................
+crypto_pyaes: Mean +- std dev: 174 ms +- 1 ms
+.....................
+crypto_pyaes: Mean +- std dev: 174 ms +- 1 ms
+.....................
+crypto_pyaes: Mean +- std dev: 174 ms +- 1 ms
+
+ Performance counter stats for 'python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/run_benchmark.py' (5 runs):
+
+         17,524.84 msec task-clock                #    0.961 CPUs utilized            ( +-  0.05% )
+             1,482      context-switches          #   84.453 /sec                     ( +-  1.00% )
+                26      cpu-migrations            #    1.482 /sec                     ( +- 11.19% )
+            78,380      page-faults               #    4.467 K/sec                    ( +-  0.01% )
+    45,074,582,018      cycles                    #    2.569 GHz                      ( +-  0.16% )  (31.10%)
+   110,140,060,956      instructions              #    2.45  insn per cycle           ( +-  0.14% )  (38.52%)
+    21,566,644,195      branches                  #    1.229 G/sec                    ( +-  0.18% )  (37.96%)
+       163,798,667      branch-misses             #    0.76% of all branches          ( +-  0.81% )  (37.96%)
+    32,738,184,467      L1-dcache-loads           #    1.866 G/sec                    ( +-  0.24% )  (38.02%)
+       432,681,900      L1-dcache-load-misses     #    1.33% of all L1-dcache accesses  ( +-  1.73% )  (38.45%)
+        49,781,492      LLC-loads                 #    2.837 M/sec                    ( +-  5.75% )  (31.42%)
+         1,287,249      LLC-load-misses           #    2.31% of all LL-cache accesses  ( +-  6.81% )  (31.92%)
    <not supported>      L1-icache-loads                                             
-           875,312      L1-icache-load-misses                                         ( +- 12.54% )  (30.65%)
-       402,030,572      dTLB-loads                #    1.995 G/sec                    ( +-  0.81% )  (31.59%)
-            29,499      dTLB-load-misses          #    0.01% of all dTLB cache accesses  ( +- 23.07% )  (31.87%)
-            35,853      iTLB-loads                #  177.942 K/sec                    ( +- 11.64% )  (31.87%)
-             9,401      iTLB-load-misses          #   38.84% of all iTLB cache accesses  ( +-  7.95% )  (30.78%)
+        92,628,404      L1-icache-load-misses                                         ( +-  1.46% )  (31.99%)
+    31,991,256,480      dTLB-loads                #    1.823 G/sec                    ( +-  0.16% )  (31.84%)
+         9,278,319      dTLB-load-misses          #    0.03% of all dTLB cache accesses  ( +-  3.66% )  (31.79%)
+         6,681,217      iTLB-loads                #  380.737 K/sec                    ( +-  4.49% )  (31.63%)
+         3,597,848      iTLB-load-misses          #   62.83% of all iTLB cache accesses  ( +-  2.60% )  (31.39%)
    <not supported>      L1-dcache-prefetches                                        
    <not supported>      L1-dcache-prefetch-misses                                   
 
-          0.205303 +- 0.000699 seconds time elapsed  ( +-  0.34% )
+           18.2389 +- 0.0260 seconds time elapsed  ( +-  0.14% )
 

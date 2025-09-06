@@ -1,26 +1,36 @@
+.....................
+crypto_pyaes: Mean +- std dev: 135 ms +- 1 ms
+.....................
+crypto_pyaes: Mean +- std dev: 136 ms +- 1 ms
+.....................
+crypto_pyaes: Mean +- std dev: 136 ms +- 1 ms
+.....................
+crypto_pyaes: Mean +- std dev: 135 ms +- 1 ms
+.....................
+crypto_pyaes: Mean +- std dev: 136 ms +- 1 ms
 
- Performance counter stats for 'python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes_opt.py' (5 runs):
+ Performance counter stats for 'python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/run_benchmark_opt.py' (5 runs):
 
-            160.36 msec task-clock                #    0.983 CPUs utilized            ( +-  0.19% )
-                 7      context-switches          #   43.531 /sec                     ( +-  7.00% )
-                 2      cpu-migrations            #   12.437 /sec                     ( +- 12.25% )
-             1,230      page-faults               #    7.649 K/sec                    ( +-  0.07% )
-       416,309,105      cycles                    #    2.589 GHz                      ( +-  0.19% )  (30.88%)
-     1,071,954,745      instructions              #    2.57  insn per cycle           ( +-  0.25% )  (40.85%)
-       202,537,348      branches                  #    1.260 G/sec                    ( +-  0.15% )  (41.12%)
-         1,908,754      branch-misses             #    0.95% of all branches          ( +-  0.90% )  (40.99%)
-       268,243,611      L1-dcache-loads           #    1.668 G/sec                    ( +-  0.17% )  (40.99%)
-         5,882,693      L1-dcache-load-misses     #    2.20% of all L1-dcache accesses  ( +-  0.54% )  (39.21%)
-           892,547      LLC-loads                 #    5.551 M/sec                    ( +-  0.83% )  (28.95%)
-               914      LLC-load-misses           #    0.10% of all LL-cache accesses  ( +-158.33% )  (29.09%)
+         14,296.30 msec task-clock                #    0.954 CPUs utilized            ( +-  0.07% )
+             1,386      context-switches          #   97.097 /sec                     ( +-  0.81% )
+                30      cpu-migrations            #    2.102 /sec                     ( +-  4.67% )
+            78,314      page-faults               #    5.486 K/sec                    ( +-  0.01% )
+    36,499,771,370      cycles                    #    2.557 GHz                      ( +-  0.12% )  (30.87%)
+    90,160,545,128      instructions              #    2.47  insn per cycle           ( +-  0.46% )  (38.85%)
+    17,693,492,478      branches                  #    1.240 G/sec                    ( +-  0.50% )  (38.85%)
+       149,122,784      branch-misses             #    0.84% of all branches          ( +-  0.75% )  (39.02%)
+    25,994,577,211      L1-dcache-loads           #    1.821 G/sec                    ( +-  0.30% )  (39.32%)
+       405,100,364      L1-dcache-load-misses     #    1.55% of all L1-dcache accesses  ( +-  1.79% )  (39.20%)
+        60,478,512      LLC-loads                 #    4.237 M/sec                    ( +-  4.11% )  (31.27%)
+         1,780,740      LLC-load-misses           #    3.17% of all LL-cache accesses  ( +-  5.77% )  (31.57%)
    <not supported>      L1-icache-loads                                             
-           656,612      L1-icache-load-misses                                         ( +-  2.24% )  (29.09%)
-       331,012,628      dTLB-loads                #    2.058 G/sec                    ( +-  0.35% )  (29.91%)
-            21,850      dTLB-load-misses          #    0.01% of all dTLB cache accesses  ( +-  7.07% )  (29.92%)
-            24,355      iTLB-loads                #  151.457 K/sec                    ( +-  9.99% )  (29.92%)
-             4,829      iTLB-load-misses          #   23.43% of all iTLB cache accesses  ( +-  8.42% )  (29.92%)
+        94,518,173      L1-icache-load-misses                                         ( +-  3.84% )  (31.59%)
+    25,792,714,124      dTLB-loads                #    1.807 G/sec                    ( +-  0.23% )  (31.56%)
+         7,352,407      dTLB-load-misses          #    0.03% of all dTLB cache accesses  ( +-  5.63% )  (31.58%)
+         6,052,755      iTLB-loads                #  424.031 K/sec                    ( +-  3.20% )  (31.15%)
+         2,955,889      iTLB-load-misses          #   50.59% of all iTLB cache accesses  ( +-  5.46% )  (30.91%)
    <not supported>      L1-dcache-prefetches                                        
    <not supported>      L1-dcache-prefetch-misses                                   
 
-          0.163152 +- 0.000256 seconds time elapsed  ( +-  0.16% )
+           14.9830 +- 0.0170 seconds time elapsed  ( +-  0.11% )
 

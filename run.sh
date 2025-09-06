@@ -28,9 +28,9 @@ export PYTHONPATH=$PYTHONPATH:$(pwd)
 
 # AES
 mkdir -p res/aes
-# run single AES benchmark with perf stat (baseline + optimised)
-perf stat -r 5 -d -d -d -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes.py > res/aes/perf_stat_aes_baseline.txt 2>&1
-perf stat -r 5 -d -d -d -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes_opt.py > res/aes/perf_stat_aes_opt.txt 2>&1
+# run AES benchmark with perf stat (baseline + optimised)
+perf stat -r 5 -d -d -d -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/run_benchmark.py > res/aes/perf_stat_aes_baseline.txt 2>&1
+perf stat -r 5 -d -d -d -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/run_benchmark_opt.py > res/aes/perf_stat_aes_opt.txt 2>&1
 
 python3 parse_perf_stat_compare.py \
   res/aes/perf_stat_aes_baseline.txt \
@@ -62,10 +62,10 @@ python3 parse_pyperf_results.py \
 
 # DC
 mkdir -p res/dc
-# run single DC benchmark with perf stat (baseline + optimised)
-perf stat -r 5 -d -d -d -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_deepcopy/single_deepcopy.py > res/dc/perf_stat_dc_baseline.txt 2>&1
+# run DC benchmark with perf stat (baseline + optimised)
+perf stat -r 5 -d -d -d -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_deepcopy/run_benchmark.py > res/dc/perf_stat_dc_baseline.txt 2>&1
 
-perf stat -r 5 -d -d -d -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_deepcopy/single_deepcopy_opt.py > res/dc/perf_stat_dc_opt.txt 2>&1
+perf stat -r 5 -d -d -d -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_deepcopy/run_benchmark_opt.py > res/dc/perf_stat_dc_opt.txt 2>&1
 
 python3 parse_perf_stat_compare.py \
   res/dc/perf_stat_dc_baseline.txt \
