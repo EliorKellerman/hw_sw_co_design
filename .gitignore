@@ -217,3 +217,5 @@ run_benches_aes.sh
 run_benches.sh
 flamemake.py
 make_flame.sh
+perf.data
+perf.data.old

@@ -44,10 +44,10 @@ py-spy record --rate 25000 --subprocesses --output res/dc/flamegraph_dc_baseline
 py-spy record --rate 25000 --subprocesses --output res/dc/flamegraph_dc_opt.svg --format flamegraph --nonblocking  -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_deepcopy/single_deepcopy_opt.py
 
 # run DC benchmark with perf report (baseline + optimised)
-perf record --call-graph dwarf -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_deepcopy/single_deepcopy.py
+perf record --call-graph dwarf -F 999 -g -- python3-dbg pyperformance-main/pyperformance/data-files/benchmarks/bm_deepcopy/single_deepcopy.py
 perf report --stdio --call-graph graph,0,caller  --sort=symbol  --no-children --percentage relative > res/dc/perf_report_dc_baseline.txt
 
-perf record --call-graph dwarf -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_deepcopy/single_deepcopy_opt.py
+perf record --call-graph dwarf -F 999 -g -- python3-dbg pyperformance-main/pyperformance/data-files/benchmarks/bm_deepcopy/single_deepcopy_opt.py
 perf report --stdio --call-graph graph,0,caller  --sort=symbol  --no-children --percentage relative > res/dc/perf_report_dc_opt.txt
 
 # run 2 versions of the full DC benchmark for performance comparison

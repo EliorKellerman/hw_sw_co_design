@@ -43,10 +43,10 @@ py-spy record --rate 25000 --subprocesses --output res/aes/flamegraph_aes_baseli
 py-spy record --rate 25000 --subprocesses --output res/aes/flamegraph_aes_opt.svg --format flamegraph --nonblocking  -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes_opt.py
 
 # run AES benchmark with perf report (baseline + optimised)
-perf record --call-graph dwarf -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes.py
+perf record --call-graph dwarf -F 999 -g -- python3-dbg pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes.py
 perf report --stdio --call-graph graph,0,caller  --sort=symbol  --no-children --percentage relative > res/aes/perf_report_aes_baseline.txt
 
-perf record --call-graph dwarf -- python3 pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes_opt.py
+perf record --call-graph dwarf -F 999 -g -- python3-dbg pyperformance-main/pyperformance/data-files/benchmarks/bm_crypto_pyaes/single_aes_opt.py
 perf report --stdio --call-graph graph,0,caller  --sort=symbol  --no-children --percentage relative > res/aes/perf_report_aes_opt.txt
 
 # run 2 versions of the full AES benchmark for performance comparison
